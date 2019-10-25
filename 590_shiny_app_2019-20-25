@@ -1,0 +1,62 @@
+#
+# This is a Shiny web application. You can run the application by clicking
+# the 'Run App' button above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
+
+library(shiny)
+library(tidyverse)
+
+#set the slider range to the range of carats in the dataset
+min.carat <-  min(diamonds$carat)
+max.carat <-  max(diamonds$carat)
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+ # actionButton("go", "Go"),
+  
+  # Application title
+  titlePanel("Diamonds data set viewer"),
+  
+  # Sidebar with a slider input for number of bins 
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("carat.adjuster",
+                  "Carats",
+                  min = min.carat,
+                  max = max.carat,
+                  value = c(min.carat,  max.carat)), #initial starting value for the slider
+      submitButton(text = "go")
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+      plotOutput("diamonds_plot")
+    )
+  )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+  
+  output$diamonds_plot <- renderPlot({
+    
+    #filter the diamonds plot so that it only contains the specified range        
+    low.carat <- input$carat.adjuster[1]
+    hi.carat <- input$carat.adjuster[2]
+    
+    d_filt <- diamonds %>%
+      filter(carat >= low.carat) %>%
+      filter(carat <= hi.carat)
+    
+    ggplot(d_filt, aes_string(x= "carat", y = "y", color = "clarity"))+
+      geom_point()
+    
+  })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
