@@ -9,6 +9,7 @@
 
 library(shiny)
 library(tidyverse)
+nms <- names(diamonds)
 
 #set the slider range to the range of carats in the dataset
 min.carat <-  min(diamonds$carat)
@@ -24,6 +25,7 @@ ui <- fluidPage(
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
+      selectInput('y', 'Y', choices = nms, selected = "price"),
       sliderInput("carat.adjuster",
                   "Carats",
                   min = min.carat,
@@ -52,7 +54,7 @@ server <- function(input, output) {
       filter(carat >= low.carat) %>%
       filter(carat <= hi.carat)
     
-    ggplot(d_filt, aes_string(x= "carat", y = "y", color = "clarity"))+
+    ggplot(d_filt, aes_string(x= "carat", y = input$y, color = "clarity"))+
       geom_point()
     
   })
