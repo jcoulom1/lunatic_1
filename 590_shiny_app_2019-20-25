@@ -17,7 +17,7 @@ max.carat <-  max(diamonds$carat)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
- # actionButton("go", "Go"),
+ # actionButton("go", "Do it!!"),
   
   # Application title
   titlePanel("Diamonds data set viewer"),
